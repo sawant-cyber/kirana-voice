@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Kirana Voice Assistant</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      padding: 20px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 450px;
+
+      background: white;
+
+      padding: 25px;
+
+      border-radius: 20px;
+
+      text-align: center;
+
+      box-shadow:
+        0 5px 20px rgba(0,0,0,0.10);
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    .mic-button {
+      width: 120px;
+      height: 120px;
+
+      border-radius: 50%;
+
+      border: none;
+
+      background: #222;
+      color: white;
+
+      font-size: 50px;
+
+      cursor: pointer;
+
+      margin: 25px 0;
+    }
+
+    .mic-button:active {
+      transform: scale(0.95);
+    }
+
+    #status {
+      padding: 15px;
+
+      border-radius: 12px;
+
+      background: #f1f1f1;
+
+      min-height: 50px;
+
+      font-size: 16px;
+    }
+
+    #result {
+      margin-top: 15px;
+
+      padding: 15px;
+
+      background: #fafafa;
+
+      border-radius: 12px;
+
+      font-size: 18px;
+
+      min-height: 50px;
+    }
+
+    .examples {
+      margin-top: 20px;
+
+      text-align: left;
+
+      padding: 15px;
+
+      background: #f5f5f5;
+
+      border-radius: 12px;
+
+      line-height: 1.8;
+
+      font-size: 14px;
+    }
+  </style>
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+  <h1>🏪 Kirana Voice Assistant</h1>
+
+  <p>
+    नीचे microphone button दबाकर बोलें
+  </p>
+
+
+  <button
+    id="micButton"
+    class="mic-button"
+    onclick="startVoice()">
+
+    🎤
+
+  </button>
+
+
+  <div id="status">
+    Ready ✅
+  </div>
+
+
+  <div id="result">
+    आपकी आवाज़ यहाँ दिखाई देगी
+  </div>
+
+
+  <div class="examples">
+
+    <b>अभी सिर्फ test के लिए बोलें:</b>
+
+    <br>
+
+    🎤 Ramesh ko 250 rupaye udhaar likh do
+
+    <br>
+
+    🎤 Ramesh ka total baki batao
+
+  </div>
+
+</div>
+
+
+<script>
+
+
+function startVoice() {
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+
+  // Browser support check
+
+  if (!SpeechRecognition) {
+
+    document.getElementById("status").innerText =
+      "❌ Is browser me Voice Recognition available nahi hai.";
+
+    return;
+  }
+
+
+  const recognition =
+    new SpeechRecognition();
+
+
+  recognition.lang = "hi-IN";
+
+  recognition.continuous = false;
+
+  recognition.interimResults = false;
+
+  recognition.maxAlternatives = 1;
+
+
+  document.getElementById("status").innerText =
+    "🎤 Sun raha hoon... Boliye";
+
+
+  document.getElementById("result").innerText =
+    "";
+
+
+  try {
+
+    recognition.start();
+
+  } catch (error) {
+
+    document.getElementById("status").innerText =
+      "❌ Microphone start nahi hua.";
+
+    return;
+  }
+
+
+  recognition.onresult =
+    function(event) {
+
+      const text =
+        event.results[0][0].transcript;
+
+
+      document.getElementById("status").innerText =
+        "✅ Microphone kaam kar raha hai!";
+
+
+      document.getElementById("result").innerText =
+        "🗣️ Aapne kaha: " + text;
+
+    };
+
+
+  recognition.onerror =
+    function(event) {
+
+      document.getElementById("status").innerText =
+        "❌ Voice error: " + event.error;
+
+    };
+
+
+  recognition.onend =
+    function() {
+
+      console.log(
+        "Voice recognition finished"
+      );
+
+    };
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
